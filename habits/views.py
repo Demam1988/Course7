@@ -24,7 +24,7 @@ class HabitListAPIView(generics.ListAPIView):
 
     serializer_class = HabitSerializer
     pagination_class = HabitPaginator
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
@@ -50,13 +50,6 @@ class HabitRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
 
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return Habit.objects.all()
-        else:
-            return Habit.objects.filter(user=user)
-
 
 class HabitUpdateAPIView(generics.UpdateAPIView):
     """Редактирование привычки"""
@@ -64,13 +57,6 @@ class HabitUpdateAPIView(generics.UpdateAPIView):
     serializer_class = HabitSerializer
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return Habit.objects.all()
-        else:
-            return Habit.objects.filter(user=user)
 
     def perform_update(self, serializer):
         updated_habit = serializer.save()
@@ -85,10 +71,3 @@ class HabitDestroyAPIView(generics.DestroyAPIView):
 
     queryset = Habit.objects.all()
     permission_classes = [IsAuthenticated, IsOwner]
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return Habit.objects.all()
-        else:
-            return Habit.objects.filter(user=user)
